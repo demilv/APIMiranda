@@ -7,6 +7,7 @@ import routerUsers from './routes/userRoutes';
 import routerReviews from './routes/reviewRoutes';
 import routerBookings from './routes/bookingRoutes';
 import AuthMiddleware, { TokenAccess } from './middleware/auth';
+import path from 'path';
 
 
 export const app = express();
@@ -14,8 +15,8 @@ export const app = express();
 app.use(express.json())
 app.use(TokenAccess())
 
-app.get('/', (_req, res) =>{
-    res.send('Salutations')
+app.get('/', (_req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.use('/rooms', AuthMiddleware, routerRooms);

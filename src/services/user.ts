@@ -14,25 +14,25 @@ export class User {
         return this.users.find(user => user.id === id);
     }
 
-    static save(newRoom: UserInterface): UserInterface {
-        this.users.push(newRoom);
-        return newRoom;
+    static save(newUser: UserInterface): UserInterface {
+        this.users.push(newUser);
+        return newUser;
     }
 
-    static findByIdAndUpdate(id: number, updatedRoomData: Partial<UserInterface>): UserInterface | undefined {
+    static findByIdAndUpdate(id: number, updatedUserData: Partial<UserInterface>): UserInterface | undefined {
         const index = this.users.findIndex(user => user.id === id);
         if (index === -1) return undefined;
 
-        const updatedRoom = { ...this.users[index], ...updatedRoomData } as UserInterface;
-        this.users[index] = updatedRoom;
-        return updatedRoom;
+        const updatedUser = { ...this.users[index], ...updatedUserData } as UserInterface;
+        this.users[index] = updatedUser;
+        return updatedUser;
     }
 
     static findByIdAndDelete(id: number): UserInterface | undefined {
         const index = this.users.findIndex(user => user.id === id);
         if (index === -1) return undefined;
 
-        const [deletedRoom] = this.users.splice(index, 1);
-        return deletedRoom;
+        const [deletedUser] = this.users.splice(index, 1);
+        return deletedUser;
     }
 }

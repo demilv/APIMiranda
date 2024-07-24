@@ -3,13 +3,12 @@ import express, {Request, Response, NextFunction} from 'express';
 import dotenv from 'dotenv';
 dotenv.config();
 import routerRooms from './routes/roomRoutes';
+import routerUsers from './routes/userRoutes';
+import routerReviews from './routes/reviewRoutes';
+import routerBookings from './routes/bookingRoutes';
 import AuthMiddleware, { TokenAccess } from './middleware/auth';
 
 
-/*
-mongoose.connect('mongodb://user:pass@127.0.0.1:port/database', { autoIndex: false })
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => console.error('MongoDB connection error:', err));*/
 export const app = express();
 
 app.use(express.json())
@@ -20,6 +19,10 @@ app.get('/', (_req, res) =>{
 });
 
 app.use('/rooms', AuthMiddleware, routerRooms);
+app.use('/users', AuthMiddleware, routerUsers);
+app.use('/reviews', AuthMiddleware, routerReviews);
+app.use('/bookings', AuthMiddleware, routerBookings);
+
 
 app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     console.error(err);

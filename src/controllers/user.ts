@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { User as UserService } from '../services/user';
-import { User as UserInterface } from '../interfaces/User';
+//import { User as UserInterface } from '../interfaces/User';
 
 export const getAllUsers = (_req: Request, res: Response, next: NextFunction) => {
     try {

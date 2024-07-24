@@ -1,18 +1,20 @@
-import express, { Request, Response, NextFunction } from 'express';
-import { Room } from '../services/room';
+import { Request, Response, NextFunction } from 'express';
+import { Room as RoomService } from '../services/room';
+import { Room as RoomInterface } from '../interfaces/Room';
 
-export const getAllRooms = async (_req: Request, res: Response, next: NextFunction) => {
+export const getAllRooms = (_req: Request, res: Response, next: NextFunction) => {
     try {
-        const rooms = await Room.find();
+        const rooms = RoomService.fetchAll();
         return res.json({ rooms });
     } catch (e) {
         return next(e);
     }
 };
 
-export const getOneRoom = async (req: Request, res: Response, next: NextFunction) => {
+export const getOneRoom = (req: Request, res: Response, next: NextFunction) => {
     try {
-        const room = await Room.findById(req.params.id);
+        const id = Number(req.params.id);
+        const room = RoomService.findById(id);
         if (!room) {
             return res.status(404).json({ message: 'Room not found' });
         }
@@ -22,19 +24,25 @@ export const getOneRoom = async (req: Request, res: Response, next: NextFunction
     }
 };
 
-export const setNewRoom = async (req: Request, res: Response, next: NextFunction) => {
+export const setNewRoom = (req: Request, res: Response, next: NextFunction) => {
     try {
-        const newRoom = new Room(req.body);
-        const savedRoom = await newRoom.save();
+        const newRoom: RoomInterface = req.body;
+        if (!newRoom.id || !newRoom.fotoLink || !newRoom.number || !newRoom.floor || 
+            !newRoom.bedType || !newRoom.amenities || !newRoom.price || !newRoom.status || !newRoom.offer) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+        const savedRoom = RoomService.save(newRoom);
         return res.status(201).json({ room: savedRoom });
     } catch (e) {
         return next(e);
     }
 };
 
-export const updateRoom = async (req: Request, res: Response, next: NextFunction) => {
+export const updateRoom = (req: Request, res: Response, next: NextFunction) => {
     try {
-        const updatedRoom = await Room.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const id = Number(req.params.id);
+        const updatedRoomData: Partial<RoomInterface> = req.body;
+        const updatedRoom = RoomService.findByIdAndUpdate(id, updatedRoomData);
         if (!updatedRoom) {
             return res.status(404).json({ message: 'Room not found' });
         }
@@ -44,9 +52,10 @@ export const updateRoom = async (req: Request, res: Response, next: NextFunction
     }
 };
 
-export const deleteRoom = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteRoom = (req: Request, res: Response, next: NextFunction) => {
     try {
-        const deletedRoom = await Room.findByIdAndDelete(req.params.id);
+        const id = Number(req.params.id);
+        const deletedRoom = RoomService.findByIdAndDelete(id);
         if (!deletedRoom) {
             return res.status(404).json({ message: 'Room not found' });
         }

@@ -1,35 +1,27 @@
-import AuthMiddleware from './middleware/auth'
 import express, {Request, Response, NextFunction} from 'express';
-const mongoose = require("mongoose");
-const dotenv = require("dotenv")
+//const mongoose = require("mongoose");
+import dotenv from 'dotenv';
 dotenv.config();
+import routerRooms from './routes/roomRoutes';
+import AuthMiddleware, { TokenAccess } from './middleware/auth';
 
 
-
-// mongoose.connect('mongodb://user:pass@127.0.0.1:port/database', {autoIndex: false});
-
+/*
+mongoose.connect('mongodb://user:pass@127.0.0.1:port/database', { autoIndex: false })
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error('MongoDB connection error:', err));*/
 export const app = express();
 
 app.use(express.json())
-app.use(AuthMiddleware)
+app.use(TokenAccess())
 
-app.get('/', (req, res) =>{
+app.get('/', (_req, res) =>{
     res.send('Salutations')
 });
 
-app.post('/login', (req, res)=> {
-    const {username, password} = req.body
-    if(username === 'asdf' && password === '1234') {
-        const token = jwt.sign(JSON.stringify({id:1}), MYKEY)
-        return res.json({token});
-    }
-    return res.status(401).json({error:true, message:'Not permitted'})
-})
+app.use('/rooms', AuthMiddleware, routerRooms);
 
-const routerRooms = require("./routes/roomRoutes")
-app.use('/rooms', routerRooms);
-
-app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     console.error(err);
-    return res.status(status).json({error: true, message: (error.message && error.safe) ? error.message : 'Application error'})
+    return res.status(500).json({error: true, message: err.message || 'Application error'})
 })

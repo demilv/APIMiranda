@@ -1,6 +1,6 @@
 export interface Room {
     id: number,
-    fotoLink: string,
+    fotoLink: string[],
     number: string,
     floor: number,
     bedType: string,
@@ -8,5 +8,4 @@ export interface Room {
     price: number,
     status: boolean,
     offer: number
-    cancelPolicy: string
 }

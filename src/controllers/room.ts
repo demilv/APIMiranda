@@ -5,7 +5,7 @@ import { Room as RoomInterface } from '../interfaces/Room';
 export const getAllRooms = (_req: Request, res: Response, next: NextFunction) => {
     try {
         const rooms = RoomService.fetchAll();
-        return res.json({ rooms });
+        return res.json( rooms );
     } catch (e) {
         return next(e);
     }
@@ -18,7 +18,7 @@ export const getOneRoom = (req: Request, res: Response, next: NextFunction) => {
         if (!room) {
             return res.status(404).json({ message: 'Room not found' });
         }
-        return res.json({ room });
+        return res.json( room );
     } catch (e) {
         return next(e);
     }

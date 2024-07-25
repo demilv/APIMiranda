@@ -5,7 +5,7 @@ import { Booking as BookingService } from '../services/booking';
 export const getAllBookings = (_req: Request, res: Response, next: NextFunction) => {
     try {
         const bookings = BookingService.fetchAll();
-        return res.json({ bookings });
+        return res.json( bookings );
     } catch (e) {
         return next(e);
     }
@@ -18,7 +18,7 @@ export const getOneBooking = (req: Request, res: Response, next: NextFunction) =
         if (!booking) {
             return res.status(404).json({ message: 'Booking not found' });
         }
-        return res.json({ booking });
+        return res.json( booking );
     } catch (e) {
         return next(e);
     }

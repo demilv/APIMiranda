@@ -5,7 +5,7 @@ import { Review as ReviewService } from '../services/review';
 export const getAllReviews = (_req: Request, res: Response, next: NextFunction) => {
     try {
         const reviews = ReviewService.fetchAll();
-        return res.json({ reviews });
+        return res.json( reviews );
     } catch (e) {
         return next(e);
     }
@@ -18,7 +18,7 @@ export const getOneReview = (req: Request, res: Response, next: NextFunction) =>
         if (!review) {
             return res.status(404).json({ message: 'Review not found' });
         }
-        return res.json({ review });
+        return res.json( review );
     } catch (e) {
         return next(e);
     }

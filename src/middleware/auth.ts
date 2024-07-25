@@ -1,17 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 
-export const TokenAccess = () =>{
+/*export const TokenAccess = () =>{
   return (_req: Request, _res: Response, _next: NextFunction) => {
     const token = jwt.sign({email: "kdeveral0@nifty.com"}, process.env.MYKEY as string, { expiresIn: '1200s'})
     _req.headers["authorization"] = `Bearer ${token}`
     _next()
   }
-}
+}*/
 
 const AuthMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+  const token = req.cookies['Authorization'];
 
   if (token == null) {
     next(res.status(401).json({ error: true, message: 'Token not provided' }));

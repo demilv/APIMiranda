@@ -5,7 +5,7 @@ import { User as UserService } from '../services/user';
 export const getAllUsers = (_req: Request, res: Response, next: NextFunction) => {
     try {
         const users = UserService.fetchAll();
-        return res.json({ users });
+        return res.json( users );
     } catch (e) {
         return next(e);
     }
@@ -18,7 +18,7 @@ export const getOneUser = (req: Request, res: Response, next: NextFunction) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        return res.json({ user });
+        return res.json( user );
     } catch (e) {
         return next(e);
     }

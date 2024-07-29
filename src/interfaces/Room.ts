@@ -4,7 +4,7 @@ export interface Room {
     number: string,
     floor: number,
     bedType: string,
-    amenities: string,
+    amenities: string[],
     price: number,
     status: boolean,
     offer: number

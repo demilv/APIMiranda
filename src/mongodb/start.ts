@@ -1,13 +1,18 @@
-import { connect } from "mongoose";
+import { connect, connection } from "mongoose";
 import { RoomModel } from './Schemas/room';
 import { UserModel } from "./Schemas/user";
 import {randomRooms} from './Seeds/room'
 import { randomUsers } from "./Seeds/user";
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+import checkUser, { hashPassword} from "./HashingChecking/HashCheck";
+
+export const loginUser = {
+  name: 'demilv',
+  pass: 'Pass123'
+}
 
 
-const exampleUser = new UserModel({
+
+export const exampleUser = new UserModel({
   photo: 'https://randomuser.me/api/portraits/men/1.jpg',
   name: 'demilv',
   startDate: new Date('2024-01-15T10:00:00Z'),
@@ -18,24 +23,26 @@ const exampleUser = new UserModel({
   pass: 'Pass123'
 });
 
-async function hashPassword(password: string): Promise<string> {
-  try {
-    const salt = await bcrypt.genSalt(saltRounds);
-    const hash = await bcrypt.hash(password, salt);
-    return hash;
-  } catch (err) {
-    throw new Error('Error en la generación del hash de la contraseña');
-  }
-}
 
-async function run() {
+
+export async function run() {
   try {
     await connect('mongodb://127.0.0.1:27017/test');
-    
+
+    await connection.db.dropCollection('rooms')
+    await connection.db.dropCollection('users')
+
     exampleUser.pass = await hashPassword(exampleUser.pass);
+    await exampleUser.save();
+
+    const authenticated = await checkUser(loginUser.name, loginUser.pass);
+    if (!authenticated) {
+      console.log('Acceso denegado');
+      return;
+    }
+
 
     await UserModel.insertMany(randomUsers);
-    await exampleUser.save();
     await RoomModel.insertMany(randomRooms);
 
     console.log('Datos insertados correctamente');

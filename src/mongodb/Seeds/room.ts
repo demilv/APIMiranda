@@ -7,14 +7,14 @@ const amenitiesOptions = ["AC", "Shower", "Double Bed", "Towel", "Bathup", "Coff
 const amenities = faker.helpers.arrayElements(amenitiesOptions, faker.datatype.number({ min: 0, max: amenitiesOptions.length }));
 
 return new RoomModel({
-    fotoLink: [faker.image.imageUrl()],
-    number: faker.datatype.number({ min: 1, max: 100 }).toString(),
-    floor: faker.datatype.number({ min: 1, max: 10 }),
+    fotoLink: [faker.image.url()],
+    number: faker.number.int({ min: 1, max: 100 }).toString(),
+    floor: faker.number.int({ min: 1, max: 10 }),
     bedType: faker.helpers.arrayElement(["Single Bed", "Double Bed", "Double Superior", "Suite"]),
     amenities: amenities,
-    price: faker.datatype.number({ min: 150, max: 200 }),
+    price: faker.number.int({ min: 150, max: 200 }),
     status: faker.datatype.boolean(),
-    offer: faker.datatype.number({ min: 100, max: 140 })
+    offer: faker.number.int({ min: 100, max: 140 })
   });
 };
 

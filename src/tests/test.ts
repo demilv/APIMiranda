@@ -27,7 +27,8 @@ import roomData from '../data/roomData.json'
 import userData from '../data/conciergeData.json'
 import bookingData from '../data/bookingsData.json'
 import reviewData from '../data/roomReview.json'
-
+import { run, loginUser } from '../mongodb/start';
+import { UserModel } from '../mongodb/Schemas/user';
 
 describe('Authentication Endpoints', () => {
     let cookie: string;
@@ -174,3 +175,58 @@ describe('Protected Endpoints', () => {
         expect(response.status).toBe(401);
     });
 });
+
+describe('Database Seeding and Authentication Tests', () => {
+    let cookie: string;
+  
+    beforeAll(async () => {
+      await run();
+    });
+  
+    it('should login with correct credentials and return a cookie', async () => {
+      const response = await request(app)
+        .post('/login')
+        .send({ email: loginUser.name, password: loginUser.pass });
+      
+      expect(response.status).toBe(302);
+      expect(response.headers['set-cookie']).toBeDefined();
+      
+      cookie = response.headers['set-cookie'];
+    });
+  
+    it('should fail to login with incorrect credentials', async () => {
+      const response = await request(app)
+        .post('/login')
+        .send({ email: loginUser.name, password: 'wrongpassword' });
+      
+      expect(response.status).toBe(401);
+    });
+  
+    it('should access rooms endpoint with valid cookie', async () => {
+      const response = await request(app)
+        .get('/rooms')
+        .set('Cookie', cookie);
+  
+      expect(response.status).toBe(200);
+      expect(response.body).toBeDefined(); 
+    });
+  
+    it('should fail to access rooms endpoint without cookie', async () => {
+      const response = await request(app).get('/rooms');
+      expect(response.status).toBe(401);
+    });
+  
+    it('should access users endpoint with valid cookie', async () => {
+      const response = await request(app)
+        .get('/users')
+        .set('Cookie', cookie);
+  
+      expect(response.status).toBe(200);
+      expect(response.body).toBeDefined();
+    });
+  
+    it('should fail to access users endpoint without cookie', async () => {
+      const response = await request(app).get('/users');
+      expect(response.status).toBe(401);
+    });  
+  });

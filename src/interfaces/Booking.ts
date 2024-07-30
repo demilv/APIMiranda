@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export interface Booking {
     id: number,
     fotoLink: string,
@@ -6,5 +8,6 @@ export interface Booking {
     checkInDate: string,
     checkOutDate: string,
     specialRequest: string,
-    status: string
+    status: string,
+    roomId: Types.ObjectId;
 }

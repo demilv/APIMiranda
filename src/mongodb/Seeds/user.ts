@@ -4,11 +4,11 @@ import { faker } from '@faker-js/faker';
 const createRandomUser = () => {
 
 return new UserModel({
-    photo: faker.image.imageUrl(),
-    name: `${faker.name.firstName()} ${faker.name.lastName()}`,
+    photo: faker.image.url(),
+    name: `${faker.person.firstName()} ${faker.person.lastName()}`,
     email: faker.internet.email(),
-    job: faker.name.jobTitle(),
-    phone: faker.phone.number('#########').toString(),
+    job: faker.person.jobTitle(),
+    phone: faker.phone.number().toString(),
     status: faker.datatype.boolean(),
     pass: faker.internet.password()
   });

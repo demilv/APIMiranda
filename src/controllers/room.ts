@@ -1,29 +1,33 @@
 import { Request, Response, NextFunction } from 'express';
 import { Room as RoomService } from '../services/room';
-import { Room as RoomInterface } from '../interfaces/Room';
+//import { Room as RoomInterface } from '../interfaces/Room';
 
-export const getAllRooms = (_req: Request, res: Response, next: NextFunction) => {
+export const getAllRooms = async (_req: Request, res: Response, next: NextFunction) => {
     try {
-        const rooms = RoomService.fetchAll();
+        const rooms = await RoomService.fetchAll();
+        if(!rooms){
+            return res.status(404).json({message: 'Rooms not found'});            
+        }
         return res.json( rooms );
     } catch (e) {
         return next(e);
     }
 };
 
-export const getOneRoom = (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const id = Number(req.params.id);
-        const room = RoomService.findById(id);
+export const getOneRoom = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        const room = await RoomService.getRoom(req.params.id);
         if (!room) {
             return res.status(404).json({ message: 'Room not found' });
         }
-        return res.json( room );
-    } catch (e) {
-        return next(e);
+        return room;
     }
-};
+    catch(e){
+        return next(e)
+    }
+} 
 
+/*
 export const setNewRoom = (req: Request, res: Response, next: NextFunction) => {
     try {
         const newRoom: RoomInterface = req.body;
@@ -63,4 +67,4 @@ export const deleteRoom = (req: Request, res: Response, next: NextFunction) => {
     } catch (e) {
         return next(e);
     }
-};
+};*/

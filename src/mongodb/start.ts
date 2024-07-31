@@ -1,8 +1,8 @@
 import { connect, connection } from "mongoose";
 import { RoomModel } from './Schemas/room';
 import { UserModel } from "./Schemas/user";
-import { BookingModel } from "./Schemas/booking';
-import { ReviewModel } from "./Schemas/review';
+import { BookingModel } from "./Schemas/booking";
+import { ReviewModel } from "./Schemas/review";
 import { generateRandomBookings } from './Seeds/booking';
 import { randomRooms } from './Seeds/room';
 import { randomUsers } from './Seeds/user';

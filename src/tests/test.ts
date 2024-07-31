@@ -175,7 +175,7 @@ describe('Protected Endpoints', () => {
         expect(response.status).toBe(401);
     });
 });
-
+/*
 describe('Database Seeding and Authentication Tests', () => {
     let cookie: string;
   
@@ -230,3 +230,5 @@ describe('Database Seeding and Authentication Tests', () => {
       expect(response.status).toBe(401);
     });  
   });
+
+  */

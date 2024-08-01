@@ -20,7 +20,7 @@ export const getOneBooking = async (req: Request, res: Response, next: NextFunct
         if (!booking) {
             return res.status(404).json({ message: 'Booking not found' });
         }
-        return booking;
+        return res.status(200).json(booking);
     }
     catch(e){
         return next(e)

@@ -1,6 +1,7 @@
 import { BookingModel } from '../mongodb/Schemas/booking';
 import { APIError } from '../errors/APIerror';
 import { Booking as BookingInterface } from '../interfaces/Booking';
+import { Types } from 'mongoose';
 
 
 export class Booking {
@@ -15,7 +16,9 @@ export class Booking {
     }
 
     static async getBooking(id: string){    
-        const booking = await BookingModel.findById(id);        
+        const objectId = new Types.ObjectId(id); 
+
+        const booking = await BookingModel.findById(objectId);        
         if (!booking){
             throw new APIError('Booking not found: ', 404);            
         }

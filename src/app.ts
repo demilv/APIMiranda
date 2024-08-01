@@ -24,10 +24,10 @@ app.get('/', (_req, res) => {
 });
 
 app.post('/login', async (req: Request, res: Response, _next: NextFunction) => {
-    const { email, password } = req.body;
-    const authenticated = await checkUser(email, password);
+    const { name, password } = req.body;    
+    const authenticated = await checkUser(name, password);
     if (authenticated) {
-        const token = jwt.sign({ email }, process.env.MYKEY || "secretKey", { expiresIn: "1800s" });
+        const token = jwt.sign({ name }, process.env.MYKEY || "secretKey", { expiresIn: "1800s" });
         res.cookie("Authorization", token, { httpOnly: true });
         return res.redirect('/');
     } else {

@@ -1,6 +1,7 @@
 import { RoomModel } from '../mongodb/Schemas/room';
 import { Room as RoomInterface } from '../interfaces/Room';
 import { APIError } from '../errors/APIerror';
+import { Types } from 'mongoose';
 
 export class Room {
     static async fetchAll(): Promise<RoomInterface[]> {
@@ -13,7 +14,9 @@ export class Room {
     }
 
     static async getRoom(id: string){    
-        const room = await RoomModel.findById(id);        
+        const objectId = new Types.ObjectId(id); 
+
+        const room = await RoomModel.findById(objectId);        
         if (!room){
             throw new APIError('Room not found: ', 404);            
         }

@@ -1,6 +1,7 @@
 import { UserModel } from '../mongodb/Schemas/user';
 import { User as UserInterface } from '../interfaces/User';
 import { APIError } from '../errors/APIerror';
+import { Types } from 'mongoose';
 
 
 export class User {
@@ -14,13 +15,18 @@ export class User {
         }
     }
 
-    static async getUser(id: string){    
-        const user = await UserModel.findById(id);        
-        if (!user){
-            throw new APIError('User not found: ', 404);            
+   
+    static async getUser(id: string) {    
+        const objectId = new Types.ObjectId(id); 
+
+        const user = await UserModel.findById(objectId); 
+        
+        if (!user) {
+            throw new APIError('User not found', 404);            
         }
         return user;
     }
+    
 
     /*
     static save(newUser: UserInterface): UserInterface {

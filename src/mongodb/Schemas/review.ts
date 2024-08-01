@@ -1,9 +1,8 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model} from 'mongoose';
 import { Review } from '../../interfaces/Review';
 
 
 const reviewSchema = new Schema<Review>({
-  id: Types.ObjectId,
   date: { type: String },
   hora: {type: String},
   customerName: {type: String},

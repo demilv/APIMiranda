@@ -1,9 +1,8 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { Room } from '../../interfaces/Room';
 
 
 const roomSchema = new Schema<Room>({
-  id: Types.ObjectId,
   fotoLink: { type: [String] },
   number: {type: String},
   floor: {type: Number},

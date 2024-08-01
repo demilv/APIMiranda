@@ -1,9 +1,8 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model} from 'mongoose';
 import { Booking } from '../../interfaces/Booking';
 
 
 const bookingSchema = new Schema<Booking>({
-  id: Types.ObjectId,
   fotoLink: { type: String },
   guest: {type: String},
   orderDate: {type: String},

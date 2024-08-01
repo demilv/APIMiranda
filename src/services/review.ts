@@ -1,6 +1,7 @@
 import { ReviewModel } from '../mongodb/Schemas/review';
 import { APIError } from '../errors/APIerror';
 import { Review as ReviewInterface } from '../interfaces/Review';
+import { Types } from 'mongoose';
 
 
 export class Review {
@@ -15,7 +16,9 @@ export class Review {
     }
 
     static async getReview(id: string){    
-        const review = await ReviewModel.findById(id);        
+        const objectId = new Types.ObjectId(id); 
+
+        const review = await ReviewModel.findById(objectId);        
         if (!review){
             throw new APIError('Review not found: ', 404);            
         }

@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { User as UserService } from '../services/user';
 //import { User as UserInterface } from '../interfaces/User';
+import { Types } from 'mongoose';
+
 
 export const getAllUsers = async (_req: Request, res: Response, next: NextFunction) => {
     try {
@@ -14,15 +16,24 @@ export const getAllUsers = async (_req: Request, res: Response, next: NextFuncti
     }
 };
 
+
 export const getOneUser = async (req: Request, res: Response, next: NextFunction) => {
-    try{
-        const user = await UserService.getUser(req.params.id);
+    try {
+        const userId = req.params.id;
+
+        if (!Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ message: 'Invalid ID format' });
+        }
+
+        const user = await UserService.getUser(userId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        return user;
+
+        return res.status(200).json(user);
+    } catch (e) {       
+            return next(e);
+        
     }
-    catch(e){
-        return next(e)
-    }
-} 
+};
+

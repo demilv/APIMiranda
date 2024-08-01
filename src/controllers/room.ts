@@ -20,7 +20,7 @@ export const getOneRoom = async (req: Request, res: Response, next: NextFunction
         if (!room) {
             return res.status(404).json({ message: 'Room not found' });
         }
-        return room;
+        return res.status(200).json(room);
     }
     catch(e){
         return next(e)

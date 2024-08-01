@@ -20,7 +20,7 @@ export const getOneReview = async (req: Request, res: Response, next: NextFuncti
         if (!review) {
             return res.status(404).json({ message: 'Review not found' });
         }
-        return review;
+        return res.status(200).json(review);
     }
     catch(e){
         return next(e)

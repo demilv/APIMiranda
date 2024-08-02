@@ -1,15 +1,23 @@
 import { Request, Response, NextFunction } from 'express';
 import { User as UserService } from '../services/user';
 //import { User as UserInterface } from '../interfaces/User';
-import { Types } from 'mongoose';
+
+const fetchAllUsers = async () => {
+    try {
+        const users = await UserService.fetchAll();
+        if (!users) {
+            throw new Error('Users not found');
+        }
+        return users;
+    } catch (e) {
+        throw e;
+    }
+};
 
 
 export const getAllUsers = async (_req: Request, res: Response, next: NextFunction) => {
     try {
-        const users = await UserService.fetchAll();
-        if(!users){
-            return res.status(404).json({message: 'Users not found'});            
-        }
+        const users = await fetchAllUsers();
         return res.json( users );
     } catch (e) {
         return next(e);
@@ -19,17 +27,14 @@ export const getAllUsers = async (_req: Request, res: Response, next: NextFuncti
 
 export const getOneUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = req.params.id;
+        const users = await fetchAllUsers();
+        const userIndex = parseInt(req.params.id, 10)-1;
 
-        if (!Types.ObjectId.isValid(userId)) {
-            return res.status(400).json({ message: 'Invalid ID format' });
-        }
-
-        const user = await UserService.getUser(userId);
-        if (!user) {
+        if (isNaN(userIndex) || userIndex < 0 || userIndex >= users.length) {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        const user = users[userIndex];
         return res.status(200).json(user);
     } catch (e) {       
             return next(e);

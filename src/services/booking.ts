@@ -1,19 +1,30 @@
-import bookingData from '../data/bookingsData.json'
+import { BookingModel } from '../mongodb/Schemas/booking';
+import { APIError } from '../errors/APIerror';
 import { Booking as BookingInterface } from '../interfaces/Booking';
+import { Types } from 'mongoose';
 
 
 export class Booking {
 
-    private static bookings: BookingInterface[] = bookingData;
-
-    static fetchAll() : BookingInterface[] {
-        return bookingData as BookingInterface[];
+    static async fetchAll(): Promise<BookingInterface[]> {
+        try {
+            const bookings = await BookingModel.find({});
+            return bookings as BookingInterface[];
+        } catch (error) {
+            throw new APIError('Bookings not found: ' + 404);
+        }
     }
 
-    static findById(id: number): BookingInterface | undefined {
-        return this.bookings.find(booking => booking.id === id);
-    }
+    static async getBooking(id: string){    
+        const objectId = new Types.ObjectId(id); 
 
+        const booking = await BookingModel.findById(objectId);        
+        if (!booking){
+            throw new APIError('Booking not found: ', 404);            
+        }
+        return booking;
+    }
+    /*
     static save(newBooking: BookingInterface): BookingInterface {
         this.bookings.push(newBooking);
         return newBooking;
@@ -34,5 +45,5 @@ export class Booking {
 
         const [deletedBooking] = this.bookings.splice(index, 1);
         return deletedBooking;
-    }
+    }*/
 }

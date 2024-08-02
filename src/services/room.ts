@@ -1,37 +1,55 @@
-import roomData from '../data/roomData.json'
+import { RoomModel } from '../mongodb/Schemas/room';
 import { Room as RoomInterface } from '../interfaces/Room';
+import { APIError } from '../errors/APIerror';
+import { Types } from 'mongoose';
 
 export class Room {
-
-    private static rooms: RoomInterface[] = roomData;
-
-    static fetchAll() : RoomInterface[] {
-        return roomData as RoomInterface[];
+    static async fetchAll(): Promise<RoomInterface[]> {
+        try {
+            const rooms = await RoomModel.find({});
+            return rooms as RoomInterface[];
+        } catch (error) {
+            throw new APIError('Rooms not found: ' + 404);
+        }
     }
 
-    static findById(id: number): RoomInterface | undefined {
-        return this.rooms.find(room => room.id === id);
+    static async getRoom(id: string){    
+        const objectId = new Types.ObjectId(id); 
+
+        const room = await RoomModel.findById(objectId);        
+        if (!room){
+            throw new APIError('Room not found: ', 404);            
+        }
+        return room;
     }
 
-    static save(newRoom: RoomInterface): RoomInterface {
-        this.rooms.push(newRoom);
-        return newRoom;
+    /*
+    static async save(newRoom: RoomInterface): Promise<RoomInterface> {
+        try {
+            const room = new RoomModel(newRoom);
+            await room.save();
+            return room as RoomInterface;
+        } catch (error) {
+            throw new Error('Error saving room: ' + error.message);
+        }
     }
 
-    static findByIdAndUpdate(id: number, updatedRoomData: Partial<RoomInterface>): RoomInterface | undefined {
-        const index = this.rooms.findIndex(room => room.id === id);
-        if (index === -1) return undefined;
-
-        const updatedRoom = { ...this.rooms[index], ...updatedRoomData } as RoomInterface;
-        this.rooms[index] = updatedRoom;
-        return updatedRoom;
+    static async Edit(id: string, updatedRoomData: Partial<RoomInterface>): Promise<RoomInterface | null> {
+        try {
+            const updatedRoom = await RoomModel.findByIdAndUpdate(id, updatedRoomData, { new: true });
+            return updatedRoom as RoomInterface | null;
+        } catch (error) {
+            throw new Error('Error updating room: ' + error.message);
+        }
     }
 
-    static findByIdAndDelete(id: number): RoomInterface | undefined {
-        const index = this.rooms.findIndex(room => room.id === id);
-        if (index === -1) return undefined;
-
-        const [deletedRoom] = this.rooms.splice(index, 1);
-        return deletedRoom;
+    static async Delete(id: string): Promise<RoomInterface | null> {
+        try {
+            const deletedRoom = await RoomModel.findByIdAndDelete(id);
+            return deletedRoom as RoomInterface | null;
+        } catch (error) {
+            throw new Error('Error deleting room: ' + error.message);
+        }
     }
+    */
 }

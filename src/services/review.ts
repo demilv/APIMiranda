@@ -1,19 +1,30 @@
-import reviewData from '../data/roomReview.json'
+import { ReviewModel } from '../mongodb/Schemas/review';
+import { APIError } from '../errors/APIerror';
 import { Review as ReviewInterface } from '../interfaces/Review';
+import { Types } from 'mongoose';
 
 
 export class Review {
 
-    private static reviews: ReviewInterface[] = reviewData;
-
-    static fetchAll() : ReviewInterface[] {
-        return reviewData as ReviewInterface[];
+    static async fetchAll(): Promise<ReviewInterface[]> {
+        try {
+            const reviews = await ReviewModel.find({});
+            return reviews as ReviewInterface[];
+        } catch (error) {
+            throw new APIError('Reviews not found: ' + 404);
+        }
     }
 
-    static findById(id: number): ReviewInterface | undefined {
-        return this.reviews.find(review => review.id === id);
-    }
+    static async getReview(id: string){    
+        const objectId = new Types.ObjectId(id); 
 
+        const review = await ReviewModel.findById(objectId);        
+        if (!review){
+            throw new APIError('Review not found: ', 404);            
+        }
+        return review;
+    }
+    /*
     static save(newReview: ReviewInterface): ReviewInterface {
         this.reviews.push(newReview);
         return newReview;
@@ -34,5 +45,5 @@ export class Review {
 
         const [deletedReview] = this.reviews.splice(index, 1);
         return deletedReview;
-    }
+    }*/
 }
